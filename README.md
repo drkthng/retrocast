@@ -1,131 +1,63 @@
 # Scenario Analyzer
 
-A desktop application for statistical analysis of financial markets. Define scenarios with technical indicator conditions, run them against historical price data, and analyze the results with interactive charts and statistics.
-
-**[Screenshots will be added after MVP]**
-
-## Prerequisites
-
-- [Node.js](https://nodejs.org/) 18+
-- [Python](https://www.python.org/) 3.11+
-- pip (comes with Python)
-- *(Optional)* [Norgate Data](https://norgatedata.com/) subscription + NDU installed
-
-## Quick Start
-
-```bash
-# Clone the repository
-git clone <repo-url>
-cd scenario-analyzer
-
-# Install Node dependencies
-npm install
-
-# Install Python dependencies
-cd backend
-pip install -r requirements.txt
-cd ..
-
-# Create environment config
-cp .env.example .env
-# Edit .env if needed (defaults work for most setups)
-
-# Start development mode
-npm run dev
-```
+Statistical scenario analysis tool for financial markets. This application integrates a Python FastAPI backend and a React Vite frontend into a single Windows desktop application using Electron.
 
 ## Project Structure
 
-```
-scenario-analyzer/
-├── backend/          # Python FastAPI backend (Phase 1)
-│   ├── app/          # Application code
-│   │   ├── api/      # Route handlers
-│   │   ├── core/     # Business logic (engine, conditions, indicators)
-│   │   ├── models/   # Pydantic data models
-│   │   └── db/       # SQLite database layer
-│   └── tests/        # pytest unit tests
-├── frontend/         # React TypeScript frontend (Phase 2)
-│   └── src/
-│       ├── components/  # UI components
-│       ├── hooks/       # Custom React hooks
-│       ├── services/    # API client
-│       └── types/       # TypeScript interfaces
-├── electron/         # Electron desktop shell (Phase 3)
-├── .agent/           # Agent governance (rules, workflows, context)
-└── docs/             # Progress tracking, changelog, obstacles
-```
+- `frontend/`: React Vite app (Frontend)
+- `backend/`: Python FastAPI app (Backend)
+- `electron/`: Electron main process and preload scripts
+- `scripts/`: Helper scripts for development and building
+- `resources/`: Application icons and assets
 
-## Development
+## Prerequisites
 
-### Running in Dev Mode
+- **Node.js**: 18.x or higher
+- **Python**: 3.11.x or higher
+- **Pip Packages**: `fastapi`, `uvicorn`, `pydantic`, etc. (See `backend/requirements.txt`)
 
-```bash
-npm run dev
-```
+## Quick Start
 
-This starts all three services concurrently:
-- **Backend** at `http://localhost:8000`
-- **Frontend** at `http://localhost:5173`
-- **Electron** window loading the frontend
+1. **Clone the repository**
+2. **Install dependencies**
+   ```bash
+   npm install
+   cd backend && pip install -r requirements.txt
+   ```
+3. **Configuration**
+   - Copy `backend/.env.example` to `backend/.env` (if applicable)
+4. **Run Development Mode**
+   ```bash
+   npm run dev
+   ```
+   This command starts the Python backend, the React frontend dev server, and the Electron wrapper concurrently.
 
-### Running Individual Components
+## Building for Windows
+
+To create a production-ready Windows installer:
 
 ```bash
-# Backend only
-cd backend
-python run.py
-
-# Frontend only
-cd frontend
-npm run dev
+npm run build:full
 ```
 
-## Building
+This will:
+1. Build the React frontend (`frontend/dist`)
+2. Package the Python backend using PyInstaller (`backend/dist`)
+3. Compile the Electron TypeScript code
+4. Create an NSIS installer using `electron-builder`
 
-### Windows Installer
+The installer will be located in the `dist-electron/` folder.
 
-```bash
-# Build the frontend
-cd frontend && npm run build && cd ..
+## Norgate Data Setup (Optional)
 
-# Bundle the Python backend
-cd backend && pyinstaller scenario-analyzer.spec && cd ..
+If using Norgate Data, ensure the Norgate Data Desktop Service is running and the Python library is correctly configured.
 
-# Build the Electron installer
-npm run build:electron
-```
+## CSV Import Format
 
-The installer will be generated in `dist-electron/`.
+(Add description of CSV format here)
 
-## Configuration
+## Tech Stack
 
-Copy `.env.example` to `.env` and adjust values:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DB_PATH` | `./data/scenarios.db` | SQLite database location |
-| `DATA_DIR` | `./data` | Data directory for cache |
-| `CSV_IMPORT_DIR` | `./data/csv` | Directory for CSV file imports |
-| `HOST` | `127.0.0.1` | Backend server host |
-| `PORT` | `8000` | Backend server port |
-
-## Data Sources
-
-### Yahoo Finance (Default)
-No setup required. Enter any valid ticker symbol (e.g., `SPY`, `AAPL`, `MSFT`) and data is fetched automatically.
-
-### CSV Files
-Place CSV files in the `data/csv/` directory. Required columns: `date`, `open`, `high`, `low`, `close`, `volume`.
-
-### Norgate Data (Optional)
-Requires a Norgate Data subscription and NDU (Norgate Data Updater) installed locally. No API key configuration needed — the app accesses Norgate's local database directly.
-
-## For AI Agents
-
-If you are an AI agent working on this project, start by reading:
-`.agent/workflows/new-agent-onboarding.md`
-
-## License
-
-MIT
+- **Frontend**: React, Vite, TypeScript, Tailwind CSS
+- **Backend**: Python 3.11, FastAPI, PyInstaller
+- **Desktop**: Electron 33, electron-builder, tree-kill

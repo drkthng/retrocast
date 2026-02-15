@@ -1,0 +1,25 @@
+{
+    "name": "scenario-analyzer",
+    "version": "1.0.0",
+    "description": "Statistical scenario analysis tool for financial markets",
+    "main": "electron/dist/main.js",
+    "scripts": {
+        "dev": "node scripts/dev.js",
+        "dev:frontend": "cd frontend && npm run dev",
+        "dev:backend": "cd backend && python run.py",
+        "build:frontend": "cd frontend && npm run build",
+        "build:backend": "node scripts/build-python.js",
+        "build:electron": "tsc -p tsconfig.electron.json",
+        "build": "npm run build:frontend && npm run build:electron && electron-builder --win",
+        "build:full": "npm run build:frontend && npm run build:backend && npm run build:electron && electron-builder --win",
+        "postinstall": "cd frontend && npm install"
+    },
+    "devDependencies": {
+        "electron": "^33.0.0",
+        "electron-builder": "^25.0.0",
+        "typescript": "^5.5.0",
+        "concurrently": "^9.0.0",
+        "wait-on": "^8.0.0",
+        "tree-kill": "^1.2.2"
+    }
+}

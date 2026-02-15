@@ -1,0 +1,35 @@
+appId: com.scenarioanalyzer.app
+productName: Scenario Analyzer
+copyright: Copyright © 2025
+
+directories:
+  output: dist-electron
+  buildResources: resources
+
+files:
+  - electron/dist/**/*
+  - frontend/dist/**/*
+  - resources/**/*
+
+extraResources:
+  - from: backend/dist/scenario-analyzer-backend/
+    to: backend/
+    filter:
+      - "**/*"
+
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+  icon: resources/icon.ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  perMachine: false
+  createDesktopIcon: true
+  createStartMenuShortcut: true
+  shortcutName: Scenario Analyzer
+  installerIcon: resources/icon.ico
+  uninstallerIcon: resources/icon.ico
+  artifactName: ScenarioAnalyzer-Setup-${version}.${ext}

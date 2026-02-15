@@ -2,6 +2,32 @@
 .env
 !.env.example
 
+# Data
+data/
+*.db
+
+# Electron build
+dist-electron/
+electron/dist/
+
+# Python build
+backend/dist/
+backend/build/
+backend/*.spec
+backend/__pycache__/
+
+# Frontend build
+frontend/dist/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
 # Python
 __pycache__/
 *.py[cod]
