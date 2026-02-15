@@ -58,25 +58,21 @@ def run_analysis(scenario: ScenarioInDB) -> AnalysisResult:
     t0 = time.time()
     indicator_columns: list[str] = []
 
-    for cond in scenario.conditions:
-        col_name = get_column_name(cond.indicator.value, cond.params)
-        if col_name not in df.columns:
-            series = compute_indicator(df, cond.indicator.value, cond.params)
-            df[col_name] = series
-        indicator_columns.append(col_name)
+    # Compute indicators for ALL conditions (both left and right side)
+    for condition in scenario.conditions:
+        # LEFT side indicator
+        if condition.indicator != "PRICE":
+            col_name = get_column_name(condition.indicator.value, condition.params)
+            if col_name not in df.columns:
+                df[col_name] = compute_indicator(df, condition.indicator.value, condition.params)
+            indicator_columns.append(col_name)
 
-        # Also compute compare indicator if needed
-        if cond.compare_to == CompareTo.INDICATOR:
-            if cond.compare_indicator and cond.compare_indicator_params:
-                compare_col = get_column_name(
-                    cond.compare_indicator.value, cond.compare_indicator_params
-                )
-                if compare_col not in df.columns:
-                    series = compute_indicator(
-                        df, cond.compare_indicator.value, cond.compare_indicator_params
-                    )
-                    df[compare_col] = series
-                indicator_columns.append(compare_col)
+        # RIGHT side indicator (if comparing to another indicator)
+        if condition.compare_to == CompareTo.INDICATOR and condition.compare_indicator:
+            compare_col = get_column_name(condition.compare_indicator.value, condition.compare_indicator_params)
+            if compare_col not in df.columns:
+                df[compare_col] = compute_indicator(df, condition.compare_indicator.value, condition.compare_indicator_params)
+            indicator_columns.append(compare_col)
 
     # Deduplicate
     indicator_columns = list(dict.fromkeys(indicator_columns))
@@ -99,10 +95,17 @@ def run_analysis(scenario: ScenarioInDB) -> AnalysisResult:
 
             # Record indicator values at signal point
             ind_values = {}
-            for col in indicator_columns:
-                val = row[col]
-                if pd.notna(val):
-                    ind_values[col] = round(float(val), 4)
+            for condition in scenario.conditions:
+                if condition.indicator != "PRICE":
+                    col = get_column_name(condition.indicator.value, condition.params)
+                    val = row[col]
+                    if pd.notna(val):
+                        ind_values[col] = round(float(val), 4)
+                if condition.compare_to == CompareTo.INDICATOR and condition.compare_indicator:
+                    col = get_column_name(condition.compare_indicator.value, condition.compare_indicator_params)
+                    val = row[col]
+                    if pd.notna(val):
+                        ind_values[col] = round(float(val), 4)
 
             signals.append(
                 Signal(

@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### ADDED
+- [2026-02-15] [Phase 2] ADDED: Flexible Condition Builder with support for Price, Indicator, and Fixed Value comparisons.
+- [2026-02-15] [Phase 2] ADDED: `PRICE` indicator support in backend core and frontend types.
+
 ### CHANGED
 - [2026-02-15] [Phase 0] CHANGED: Project renamed from "Scenario Analyzer" to "Retrocast"
 - [2026-02-15] [Phase 0] ADDED: Comprehensive GitHub README with badges, usage guide, and tech stack documentation

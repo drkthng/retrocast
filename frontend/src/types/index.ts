@@ -1,5 +1,6 @@
 // Enums as union types
 export type Indicator =
+    | "PRICE"
     | "SMA"
     | "EMA"
     | "RSI"

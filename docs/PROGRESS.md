@@ -47,7 +47,7 @@ Last updated: 2026-02-15
 - [ ] Layout components (`AppShell`, `Sidebar`, `PageHeader`)
 - [ ] Scenario list page (dashboard)
 - [ ] Scenario editor (create/edit form)
-- [ ] Condition builder (visual condition rows)
+- [x] Condition builder (visual condition rows) UPGRADED
 - [ ] Target builder (target configuration)
 - [ ] Results dashboard (stats, bars, distribution)
 - [ ] Signals table (TanStack Table with pagination)
@@ -74,3 +74,4 @@ Last updated: 2026-02-15
 |------|-------|--------|--------|
 | 2026-02-15 | Phase 0 Agent | Project setup & governance files | ✅ |
 | 2026-02-15 | Phase 1 Agent | Python Backend Implementation | ✅ |
+| 2026-02-15 | Antigravity   | Upgraded Condition Builder (UI + Logic) | ✅ |

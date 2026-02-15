@@ -92,3 +92,11 @@ When you encounter a problem during development:
 - **Solution**: Use http-get:// prefix in wait-on URLs to force GET requests
 - **Prevention**: Always use http-get:// prefix with wait-on when targeting API servers
 - **Related Files**: `scripts/dev.js`, `electron/main.ts`
+### Mock Data Scenarios for Signal Testing
+- **Date**: 2026-02-15
+- **Phase**: 1/2
+- **Problem**: Random noise in mock data makes it hard to test CROSSES operators predictably.
+- **Root Cause**: Mathematical probability of a cross on a specific bar is low with high variance noise.
+- **Solution**: Use perfectly linear trends or specific slopes in mock data for verification scripts.
+- **Prevention**: Use fixed-seed deterministic mock data for automated tests.
+- **Related Files**: `verify_upgrade.py` (verification script)

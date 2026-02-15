@@ -24,6 +24,9 @@ def get_column_name(indicator: str, params: dict) -> str:
     """
     indicator = indicator.upper()
 
+    if indicator == "PRICE":
+        return "close"
+
     if indicator in ("SMA", "EMA", "RSI", "ATR", "ADX", "PRICE_CHANGE",
                      "VOLUME_RATIO", "HIGHEST", "LOWEST"):
         return f"{indicator}_{params['period']}"
@@ -45,7 +48,9 @@ def get_column_name(indicator: str, params: dict) -> str:
 
     else:
         # Fallback: join all param values
-        parts = [indicator] + [str(v) for v in params.values()]
+        parts = [indicator]
+        for key in sorted(params.keys()):
+            parts.append(str(params[key]))
         return "_".join(parts)
 
 
@@ -99,88 +104,86 @@ def _build_groups(conditions: list[ConditionConfig]) -> list[list[ConditionConfi
     return groups
 
 
-def _evaluate_single(
-    df: pd.DataFrame,
-    idx: int,
-    cond: ConditionConfig,
-) -> bool:
+def _evaluate_single(df: pd.DataFrame, idx: int, condition: ConditionConfig) -> bool:
     """Evaluate a single condition at the given row index."""
-    col_name = get_column_name(cond.indicator.value, cond.params)
-
-    if col_name not in df.columns:
-        logger.warning("Indicator column '%s' not found in DataFrame", col_name)
-        return False
-
-    indicator_val = df.iloc[idx][col_name]
-    if _is_nan(indicator_val):
-        return False
-
-    # Determine compare value
-    compare_val = _get_compare_value(df, idx, cond)
-    if compare_val is None or _is_nan(compare_val):
-        return False
-
-    # Evaluate operator
-    if cond.operator == Operator.ABOVE:
-        return float(indicator_val) > float(compare_val)
-
-    elif cond.operator == Operator.BELOW:
-        return float(indicator_val) < float(compare_val)
-
-    elif cond.operator == Operator.CROSSES_ABOVE:
-        if idx < 1:
-            return False
-        prev_indicator = df.iloc[idx - 1][col_name]
-        prev_compare = _get_compare_value(df, idx - 1, cond)
-        if _is_nan(prev_indicator) or prev_compare is None or _is_nan(prev_compare):
-            return False
-        return (
-            float(prev_indicator) <= float(prev_compare)
-            and float(indicator_val) > float(compare_val)
-        )
-
-    elif cond.operator == Operator.CROSSES_BELOW:
-        if idx < 1:
-            return False
-        prev_indicator = df.iloc[idx - 1][col_name]
-        prev_compare = _get_compare_value(df, idx - 1, cond)
-        if _is_nan(prev_indicator) or prev_compare is None or _is_nan(prev_compare):
-            return False
-        return (
-            float(prev_indicator) >= float(prev_compare)
-            and float(indicator_val) < float(compare_val)
-        )
-
+    # === GET LEFT SIDE VALUE ===
+    if condition.indicator == "PRICE":
+        left_col = "close"
     else:
-        logger.warning("Unsupported operator: %s", cond.operator)
+        left_col = get_column_name(condition.indicator.value, condition.params)
+
+    if left_col not in df.columns:
+        logger.warning("Indicator column '%s' not found in DataFrame", left_col)
         return False
 
+    left_val = df.iloc[idx][left_col]
 
-def _get_compare_value(
-    df: pd.DataFrame,
-    idx: int,
-    cond: ConditionConfig,
-) -> Optional[float]:
-    """Get the comparison value for a condition at a given index."""
-    if cond.compare_to == CompareTo.PRICE:
-        return float(df.iloc[idx]["close"])
-
-    elif cond.compare_to == CompareTo.VALUE:
-        return cond.compare_value
-
-    elif cond.compare_to == CompareTo.INDICATOR:
-        if cond.compare_indicator is None or cond.compare_indicator_params is None:
+    # === GET RIGHT SIDE VALUE ===
+    if condition.compare_to == CompareTo.PRICE:
+        right_col = "close"
+        right_val = df.iloc[idx]["close"]
+    elif condition.compare_to == CompareTo.VALUE:
+        right_col = None  # No column, fixed value
+        right_val = condition.compare_value
+    elif condition.compare_to == CompareTo.INDICATOR:
+        if condition.compare_indicator is None or condition.compare_indicator_params is None:
             logger.warning("compare_indicator or params missing for INDICATOR comparison")
-            return None
-        compare_col = get_column_name(
-            cond.compare_indicator.value, cond.compare_indicator_params
-        )
-        if compare_col not in df.columns:
-            logger.warning("Compare indicator column '%s' not found", compare_col)
-            return None
-        return float(df.iloc[idx][compare_col])
+            return False
+        right_col = get_column_name(condition.compare_indicator.value, condition.compare_indicator_params)
+        if right_col not in df.columns:
+            logger.warning("Compare indicator column '%s' not found", right_col)
+            return False
+        right_val = df.iloc[idx][right_col]
+    else:
+        return False
 
-    return None
+    # === CHECK FOR NaN ===
+    if _is_nan(left_val) or _is_nan(right_val):
+        return False
+
+    left_val = float(left_val)
+    right_val = float(right_val)
+
+    # === EVALUATE OPERATOR ===
+    if condition.operator == Operator.ABOVE:
+        return left_val > right_val
+
+    elif condition.operator == Operator.BELOW:
+        return left_val < right_val
+
+    elif condition.operator == Operator.CROSSES_ABOVE:
+        if idx < 1:
+            return False
+        prev_left = df.iloc[idx - 1][left_col]
+        if condition.compare_to == CompareTo.VALUE:
+            prev_right = condition.compare_value
+        elif condition.compare_to == CompareTo.PRICE:
+            prev_right = df.iloc[idx - 1]["close"]
+        else:
+            prev_right = df.iloc[idx - 1][right_col]
+
+        if _is_nan(prev_left) or _is_nan(prev_right):
+            return False
+
+        return float(prev_left) <= float(prev_right) and left_val > right_val
+
+    elif condition.operator == Operator.CROSSES_BELOW:
+        if idx < 1:
+            return False
+        prev_left = df.iloc[idx - 1][left_col]
+        if condition.compare_to == CompareTo.VALUE:
+            prev_right = condition.compare_value
+        elif condition.compare_to == CompareTo.PRICE:
+            prev_right = df.iloc[idx - 1]["close"]
+        else:
+            prev_right = df.iloc[idx - 1][right_col]
+
+        if _is_nan(prev_left) or _is_nan(prev_right):
+            return False
+
+        return float(prev_left) >= float(prev_right) and left_val < right_val
+
+    return False
 
 
 def _is_nan(val) -> bool:

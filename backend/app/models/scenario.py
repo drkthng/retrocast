@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 
 
 class Indicator(str, Enum):
+    PRICE = "PRICE"
     SMA = "SMA"
     EMA = "EMA"
     RSI = "RSI"

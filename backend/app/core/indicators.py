@@ -22,7 +22,10 @@ def compute_indicator(df: pd.DataFrame, indicator: str, params: dict) -> pd.Seri
     low = df["low"]
     # volume = df["volume"]  # If needed for OBV etc
 
-    if indicator == "SMA":
+    if indicator == "PRICE":
+        return df["close"]
+
+    elif indicator == "SMA":
         return ta.trend.SMAIndicator(close=close, window=params["period"], fillna=False).sma_indicator()
 
     elif indicator == "EMA":
