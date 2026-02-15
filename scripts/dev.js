@@ -14,7 +14,7 @@ const { result } = concurrently([
         prefixColor: 'blue',
     },
     {
-        command: 'echo "Waiting for health checks..." && npx wait-on --timeout 60000 http://127.0.0.1:8000/health http://127.0.0.1:5173 && echo "Health checks passed! Compiling Electron..." && npx tsc -p tsconfig.electron.json && echo "Starting Electron..." && npx electron .',
+        command: 'echo "Waiting for health checks..." && npx wait-on --timeout 30000 http-get://127.0.0.1:8000/health http-get://127.0.0.1:5173 && echo "Health checks passed! Compiling Electron..." && npx tsc -p tsconfig.electron.json && echo "Starting Electron..." && npx electron .',
         name: 'electron',
         prefixColor: 'yellow',
     },

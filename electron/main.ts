@@ -1,6 +1,9 @@
 import { app, BrowserWindow, dialog } from 'electron';
 import path from 'path';
+import fs from 'fs';
 import { PythonManager } from './pythonManager';
+
+console.log('[Electron] main.ts loaded, app starting...');
 
 // Detect if running in development
 const isDev = !app.isPackaged;
@@ -9,13 +12,16 @@ let mainWindow: BrowserWindow | null = null;
 const pythonManager = new PythonManager();
 
 async function createWindow() {
+    const iconPath = path.join(__dirname, '..', 'resources', 'icon.png');
+    console.log('[Electron] Creating BrowserWindow...');
+
     mainWindow = new BrowserWindow({
         width: 1400,
         height: 900,
         minWidth: 1024,
         minHeight: 768,
         title: 'Retrocast',
-        // icon: path.join(__dirname, '../resources/icon.png'),
+        icon: fs.existsSync(iconPath) ? iconPath : undefined,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false,
@@ -31,10 +37,11 @@ async function createWindow() {
     });
 
     if (isDev) {
+        console.log('[Electron] Loading URL: http://127.0.0.1:5173');
         mainWindow.loadURL('http://127.0.0.1:5173');
         mainWindow.webContents.openDevTools();
     } else {
-        mainWindow.loadFile(path.join(__dirname, '../frontend/dist/index.html'));
+        mainWindow.loadFile(path.join(__dirname, '..', 'frontend', 'dist', 'index.html'));
     }
 
     mainWindow.on('closed', () => {

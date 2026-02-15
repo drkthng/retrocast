@@ -83,3 +83,12 @@ When you encounter a problem during development:
 - **Solution**: For this app, this is fine — single user, sequential operations. If issues arise, use `check_same_thread=False` and add a threading lock.
 - **Prevention**: Keep database operations sequential. No concurrent writes.
 - **Related Files**: `backend/app/db/database.py`
+
+### wait-on HEAD vs GET
+- **Date**: 2026-02-15
+- **Phase**: 3
+- **Problem**: Electron window never opens during npm run dev
+- **Root Cause**: wait-on sends HEAD requests by default. FastAPI returns 405 for HEAD on /health. wait-on hangs forever, Electron command never executes.
+- **Solution**: Use http-get:// prefix in wait-on URLs to force GET requests
+- **Prevention**: Always use http-get:// prefix with wait-on when targeting API servers
+- **Related Files**: `scripts/dev.js`, `electron/main.ts`
