@@ -14,7 +14,7 @@ async function createWindow() {
         height: 900,
         minWidth: 1024,
         minHeight: 768,
-        title: 'Scenario Analyzer',
+        title: 'Retrocast',
         // icon: path.join(__dirname, '../resources/icon.png'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),

@@ -10,6 +10,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### CHANGED
+- [2026-02-15] [Phase 0] CHANGED: Project renamed from "Scenario Analyzer" to "Retrocast"
+- [2026-02-15] [Phase 0] ADDED: Comprehensive GitHub README with badges, usage guide, and tech stack documentation
+- [2026-02-15] [Phase 0] ADDED: MIT License
+
 ### INFRASTRUCTURE
 - [2026-02-15] [Phase 0] ADDED: Project governance structure (`.agent/` directory)
 - [2026-02-15] [Phase 0] ADDED: Agent rules — general, Python, React, Electron, git/secrets

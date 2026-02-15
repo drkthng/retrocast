@@ -14,6 +14,9 @@ Last updated: 2026-02-15
 - [x] Create `.gitignore`
 - [x] Create `.env.example`
 - [x] Create `README.md` skeleton
+- [x] Global rename to "Retrocast" (REBRANDING)
+- [x] GitHub-ready README.md
+- [x] LICENSE file
 - [x] Verify directory structure is complete
 
 ### Phase 1: Python Backend ✅

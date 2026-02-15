@@ -35,7 +35,7 @@ def _detect_norgate() -> None:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Startup / shutdown lifecycle."""
-    logger.info("Starting Scenario Analyzer Backend...")
+    logger.info("Starting Retrocast API...")
     init_database()
     _detect_norgate()
     os.makedirs(settings.data_dir, exist_ok=True)
@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Scenario Analyzer",
+    title="Retrocast API",
     version="1.0.0",
     lifespan=lifespan,
 )

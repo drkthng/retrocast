@@ -57,6 +57,15 @@ When you encounter a problem during development:
 - **Prevention**: Always use `tree-kill` for process cleanup on Windows. Never use `process.kill()` directly.
 - **Related Files**: `electron/pythonManager.ts`
 
+### [REBRANDING] Project Rename to Retrocast
+- **Date**: 2026-02-15
+- **Phase**: 0
+- **Problem**: Project name "Scenario Analyzer" was too generic.
+- **Root Cause**: Business decision to rebrand as Retrocast.
+- **Solution**: Global replacement of all project name and technical identifiers across 20+ files.
+- **Prevention**: N/A
+- **Related Files**: All governance, setup, and source files.
+
 ### TradingView Lightweight Charts Resize
 - **Date**: 2026-02-15 (pre-documented)
 - **Phase**: 2

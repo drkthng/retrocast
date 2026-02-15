@@ -1,10 +1,10 @@
 ---
-description: First thing a new agent should read when starting work on Scenario Analyzer
+description: First thing a new agent should read when starting work on Retrocast
 ---
 
 # New Agent Onboarding
 
-Welcome. You are working on **Scenario Analyzer** — a desktop application for statistical analysis of financial markets.
+Welcome. You are working on **Retrocast** — a desktop application for statistical analysis of financial markets.
 
 ## Read These Files IN ORDER
 

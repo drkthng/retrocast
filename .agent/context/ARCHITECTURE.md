@@ -2,7 +2,7 @@
 
 ## System Design
 
-Scenario Analyzer is a **desktop application** for statistical analysis of financial markets.
+Retrocast is a **desktop application** for statistical analysis of financial markets.
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -73,7 +73,7 @@ Scenario Analyzer is a **desktop application** for statistical analysis of finan
 ## Directory Structure (Target)
 
 ```
-scenario-analyzer/
+retrocast/
 ├── backend/
 │   ├── app/
 │   │   ├── __init__.py

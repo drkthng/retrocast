@@ -1,5 +1,5 @@
 {
-    "name": "scenario-analyzer",
+    "name": "retrocast",
     "version": "1.0.0",
     "description": "Statistical scenario analysis tool for financial markets",
     "main": "electron/dist/main.js",

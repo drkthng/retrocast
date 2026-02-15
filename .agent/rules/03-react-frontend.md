@@ -1,5 +1,5 @@
 ---
-description: React/TypeScript frontend coding rules for Scenario Analyzer (Phase 2)
+description: React/TypeScript frontend coding rules for Retrocast (Phase 2)
 ---
 
 # React Frontend Rules

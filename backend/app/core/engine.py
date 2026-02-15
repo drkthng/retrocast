@@ -1,4 +1,4 @@
-"""Main analysis engine — the heart of Scenario Analyzer."""
+"""Main analysis engine — the heart of Retrocast."""
 
 import logging
 import time

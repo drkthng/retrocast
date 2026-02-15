@@ -1,5 +1,5 @@
 ---
-description: Git hygiene and secret handling rules for Scenario Analyzer
+description: Git hygiene and secret handling rules for Retrocast
 ---
 
 # Git & Secrets Rules

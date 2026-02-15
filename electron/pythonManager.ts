@@ -27,7 +27,7 @@ export class PythonManager {
             const exePath = path.join(
                 process.resourcesPath,
                 'backend',
-                'scenario-analyzer-backend.exe'
+                'retrocast-backend.exe'
             );
             this.process = spawn(exePath, [], {
                 stdio: ['pipe', 'pipe', 'pipe'],

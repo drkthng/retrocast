@@ -1,5 +1,5 @@
 ---
-description: Python backend coding rules for Scenario Analyzer (Phase 1)
+description: Python backend coding rules for Retrocast (Phase 1)
 ---
 
 # Python Backend Rules

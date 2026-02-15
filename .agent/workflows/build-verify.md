@@ -1,5 +1,5 @@
 ---
-description: How to verify the build works for each project phase
+description: How to verify the build works for each project phase of Retrocast
 ---
 
 # Build Verification

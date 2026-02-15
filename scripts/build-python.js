@@ -6,7 +6,7 @@ console.log('Building Python backend with PyInstaller...');
 const backendDir = path.join(__dirname, '..', 'backend');
 
 execSync(
-    'pyinstaller --onedir --name scenario-analyzer-backend --add-data "app;app" run.py',
+    'pyinstaller --onedir --name retrocast-backend --add-data "app;app" run.py',
     {
         cwd: backendDir,
         stdio: 'inherit',

@@ -1,5 +1,5 @@
 ---
-description: Electron desktop shell rules for Scenario Analyzer (Phase 3)
+description: Electron desktop shell rules for Retrocast (Phase 3)
 ---
 
 # Electron Rules
