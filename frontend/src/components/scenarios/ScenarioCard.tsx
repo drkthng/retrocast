@@ -89,18 +89,19 @@ export function ScenarioCard({ scenario, onRun, onDelete }: ScenarioCardProps) {
                 </div>
             </CardContent>
 
-            <CardFooter className="flex justify-end gap-2 pt-0" onClick={(e) => e.stopPropagation()}>
-                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); navigate(`/scenarios/${scenario.id}`); }}>
+            <CardFooter className="flex flex-wrap justify-end gap-x-2 gap-y-2 pt-0" onClick={(e) => e.stopPropagation()}>
+                <Button variant="ghost" size="sm" className="h-8 px-2" onClick={(e) => { e.stopPropagation(); navigate(`/scenarios/${scenario.id}`); }}>
                     <Edit className="w-4 h-4 mr-2" />
                     Edit
                 </Button>
-                <Button variant="ghost" size="sm" onClick={(e) => onRun(scenario.id, e)}>
+                <Button variant="ghost" size="sm" className="h-8 px-2" onClick={(e) => onRun(scenario.id, e)}>
                     <Play className="w-4 h-4 mr-2" />
                     Run
                 </Button>
                 <Button
                     variant="ghost"
                     size="sm"
+                    className="h-8 px-2"
                     onClick={(e) => { e.stopPropagation(); navigate(`/scenarios/${scenario.id}/results`); }}
                     disabled={!scenario.last_run_total_signals}
                 >
@@ -110,7 +111,7 @@ export function ScenarioCard({ scenario, onRun, onDelete }: ScenarioCardProps) {
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10 p-0"
                     onClick={(e) => onDelete(scenario.id, e)}
                 >
                     <Trash2 className="w-4 h-4" />

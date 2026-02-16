@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useScenarios } from "@/hooks/useScenarios";
 import { ScenarioCard } from "./ScenarioCard";
 import { useAnalysis } from "@/hooks/useAnalysis";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 export default function ScenarioList() {
     const { scenarios, isLoading, error, fetchScenarios, deleteScenario } = useScenarios();
@@ -26,9 +26,9 @@ export default function ScenarioList() {
 
     const handleRun = async (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
-        // toast.info("Starting analysis...");
+        toast.info("Starting analysis...");
         await runAnalysis(id);
-        // toast.success("Analysis started");
+        toast.success("Analysis started");
         navigate(`/scenarios/${id}/results`);
     };
 

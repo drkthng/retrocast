@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { analysisApi } from "@/services/api";
 import type { AnalysisResult } from "@/types";
+import { toast } from "sonner";
 
 interface UseAnalysisReturn {
     result: AnalysisResult | null;
@@ -26,6 +27,7 @@ export function useAnalysis(): UseAnalysisReturn {
         } catch (err: any) {
             const msg = err.response?.data?.detail || err.message || "Analysis failed";
             setError(msg);
+            toast.error(msg);
             console.error(err);
         } finally {
             setIsAnalyzing(false);

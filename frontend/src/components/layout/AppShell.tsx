@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
-// import { Toaster } from "@/components/ui/sonner"; // Assuming sonner/toast is installed or will be
+import { Toaster } from "sonner";
 
 export function AppShell() {
     return (
@@ -11,7 +11,7 @@ export function AppShell() {
                     <Outlet />
                 </div>
             </main>
-            {/* <Toaster /> Placeholder for toast notifications */}
+            <Toaster richColors closeButton position="bottom-right" />
         </div>
     );
 }

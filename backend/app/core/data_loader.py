@@ -142,13 +142,22 @@ def _load_norgate(ticker: str) -> pd.DataFrame:
             "Install the norgatedata package and Norgate Data Updater to use this source."
         )
 
-    df = norgatedata.price_timeseries(
+    data = norgatedata.price_timeseries(
         ticker,
         stock_price_adjustment_setting=norgatedata.StockPriceAdjustmentType.TOTALRETURN,
         padding_setting=norgatedata.PaddingType.NONE,
     )
 
-    if df is None or df.empty:
+    if data is None or len(data) == 0:
         raise ValueError(f"No data returned from Norgate for ticker '{ticker}'")
+
+    # Norgate returns a numpy recarray, convert to DataFrame
+    df = pd.DataFrame(data)
+    
+    # Norgate includes a 'Date' column in the recarray, set it as index
+    if "Date" in df.columns:
+        df["Date"] = pd.to_datetime(df["Date"])
+        df = df.set_index("Date")
+        df.index.name = "date"
 
     return df
