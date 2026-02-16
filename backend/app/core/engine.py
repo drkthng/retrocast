@@ -156,7 +156,10 @@ def run_analysis(scenario: ScenarioInDB) -> AnalysisResult:
             change_pct = (future_close - signal_close) / signal_close * 100
 
             if target.direction.value == "BELOW":
-                hit = change_pct <= target.threshold_pct
+                # If the user says BELOW 5%, they usually mean "lost 5% or more", which is <= -5%
+                # We treat positive thresholds as the magnitude of loss for the BELOW direction.
+                effective_threshold = -target.threshold_pct if target.threshold_pct > 0 else target.threshold_pct
+                hit = change_pct <= effective_threshold
             else:  # ABOVE
                 hit = change_pct >= target.threshold_pct
 
