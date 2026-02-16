@@ -59,6 +59,7 @@ class DataSource(str, Enum):
 
 class Timeframe(str, Enum):
     DAILY = "DAILY"
+    D1 = "1d"
     # WEEKLY = "WEEKLY"       # Future
     # INTRADAY = "INTRADAY"   # Future
 
