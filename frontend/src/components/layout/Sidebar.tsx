@@ -1,28 +1,39 @@
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
+import { NavLink, Link } from "react-router-dom";
 import {
     LayoutDashboard,
     PlusCircle,
     Settings,
     ChevronLeft,
     ChevronRight,
-    LineChart
+    LineChart,
+    FileText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useScenarios } from "@/hooks/useScenarios";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function Sidebar() {
     const [collapsed, setCollapsed] = useState(false);
+    const { scenarios, fetchScenarios } = useScenarios();
+
+    useEffect(() => {
+        fetchScenarios();
+    }, [fetchScenarios]);
+
+    // Get 5 most recent scenarios
+    const recentScenarios = scenarios.slice(0, 5);
 
     return (
         <aside
             className={cn(
                 "flex flex-col border-r bg-card transition-all duration-300 ease-in-out h-screen sticky top-0",
-                collapsed ? "w-[60px]" : "w-[200px]"
+                collapsed ? "w-[60px]" : "w-[240px]"
             )}
         >
             <div className="h-16 flex items-center justify-between px-4 border-b">
-                {!collapsed && <span className="font-bold text-lg tracking-tight">ScenarioAnalyzer</span>}
+                {!collapsed && <span className="font-bold text-lg tracking-tight text-primary">Retrocast</span>}
                 {collapsed && <LineChart className="w-6 h-6 text-primary" />}
                 <Button
                     variant="ghost"
@@ -34,9 +45,35 @@ export function Sidebar() {
                 </Button>
             </div>
 
-            <nav className="flex-1 py-4 flex flex-col gap-2 px-2">
+            <nav className="flex-1 py-4 flex flex-col gap-2 px-2 overflow-hidden">
                 <NavItem to="/" icon={LayoutDashboard} label="Dashboard" collapsed={collapsed} />
                 <NavItem to="/scenarios/new" icon={PlusCircle} label="New Scenario" collapsed={collapsed} />
+
+                {!collapsed && (
+                    <div className="mt-6 px-3">
+                        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                            Recent Scenarios
+                        </h3>
+                        <ScrollArea className="h-[300px] -mx-3 px-3">
+                            <div className="space-y-1">
+                                {recentScenarios.map((s) => (
+                                    <Link
+                                        key={s.id}
+                                        to={`/scenarios/${s.id}`}
+                                        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors group"
+                                    >
+                                        <FileText className="h-3.5 w-3.5 shrink-0 transition-colors group-hover:text-primary" />
+                                        <span className="truncate">{s.name}</span>
+                                    </Link>
+                                ))}
+                                {recentScenarios.length === 0 && (
+                                    <p className="text-[10px] text-muted-foreground italic px-2">No scenarios yet</p>
+                                )}
+                            </div>
+                        </ScrollArea>
+                    </div>
+                )}
+
                 <div className="flex-1" />
                 <NavItem to="/settings" icon={Settings} label="Settings" collapsed={collapsed} />
             </nav>
