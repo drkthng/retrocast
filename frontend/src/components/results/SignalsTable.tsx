@@ -67,7 +67,7 @@ export function SignalsTable({ signals, onSignalClick }: SignalsTableProps) {
         const firstSignal = signals[0];
         const outcomeColumns = firstSignal.outcomes.map((outcome, index) => ({
             id: `outcome_${index}`,
-            header: `${outcome.days_forward}d Target`,
+            header: `${outcome.days_forward}d (${outcome.direction === "ABOVE" ? "↑" : "↓"} ${outcome.threshold_pct}%)`,
             cell: ({ row }: { row: any }) => {
                 const o = row.original.outcomes[index];
                 if (!o) return "-";

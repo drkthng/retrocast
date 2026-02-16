@@ -90,7 +90,11 @@ export default function ResultsDashboard() {
                         {/* Right: Distribution Chart */}
                         <div className="lg:col-span-2">
                             {activeTargetStats ? (
-                                <DistributionChart target={activeTargetStats} />
+                                <DistributionChart
+                                    target={activeTargetStats}
+                                    targets={result.target_stats}
+                                    onTargetChange={setActiveTargetId}
+                                />
                             ) : (
                                 <div className="h-[400px] flex items-center justify-center border rounded bg-card text-muted-foreground">
                                     Select a target to view distribution
