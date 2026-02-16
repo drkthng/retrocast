@@ -65,6 +65,7 @@ Desktop.ini
 - Types: `feat`, `fix`, `refactor`, `test`, `docs`, `infra`.
 - Keep commits focused — one logical change per commit.
 - Do NOT commit generated files (build output, compiled assets, coverage reports).
+- **NEVER** commit before the user explicitly tells you to do so. This is a strict requirement.
 
 ## 5. Branch Strategy
 
