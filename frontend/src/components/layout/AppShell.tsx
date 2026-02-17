@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { Toaster } from "sonner";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 export function AppShell() {
     return (
@@ -8,7 +9,9 @@ export function AppShell() {
             <Sidebar />
             <main className="flex-1 flex flex-col overflow-hidden">
                 <div className="flex-1 overflow-auto">
-                    <Outlet />
+                    <ErrorBoundary>
+                        <Outlet />
+                    </ErrorBoundary>
                 </div>
             </main>
             <Toaster richColors closeButton position="bottom-right" />

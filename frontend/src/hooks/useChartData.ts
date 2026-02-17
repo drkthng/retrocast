@@ -14,7 +14,7 @@ interface UseChartDataReturn {
     ohlcv: OHLCV[];
     isLoading: boolean;
     error: string | null;
-    fetchOHLCV: (ticker: string, source: string) => Promise<void>;
+    fetchOHLCV: (ticker: string, source: string, start?: string, end?: string) => Promise<void>;
 }
 
 export function useChartData(): UseChartDataReturn {
@@ -22,7 +22,7 @@ export function useChartData(): UseChartDataReturn {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchOHLCV = useCallback(async (ticker: string, source: string) => {
+    const fetchOHLCV = useCallback(async (ticker: string, source: string, start?: string, end?: string) => {
         if (!ticker) return;
 
         setIsLoading(true);
@@ -31,7 +31,8 @@ export function useChartData(): UseChartDataReturn {
             const response = await dataApi.ohlcv({
                 ticker,
                 source,
-                start: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Default 1 year 
+                start: start || new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                end: end
             });
 
             // Transform data for Lightweight Charts

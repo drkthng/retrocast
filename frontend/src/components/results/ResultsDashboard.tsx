@@ -110,7 +110,7 @@ export default function ResultsDashboard() {
                             signals={result.signals}
                             onSignalClick={(signal) => {
                                 // Navigate to chart view with query param specific to this signal date
-                                navigate(`/scenarios/${id}/chart?signal=${signal.date}`);
+                                navigate(`/scenarios/${id}/chart?signal=${signal.date}${activeTargetId ? `&target=${activeTargetId}` : ''}`);
                             }}
                         />
                     </div>

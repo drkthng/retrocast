@@ -61,6 +61,7 @@ export interface Scenario extends ScenarioCreate {
     id: string;
     created_at: string;
     updated_at: string;
+    last_run_result?: AnalysisResult;
 }
 
 export interface ScenarioSummary {
