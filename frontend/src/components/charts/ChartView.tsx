@@ -128,14 +128,28 @@ export default function ChartView() {
     const handleNextSignal = () => {
         if (!result || signalIndex === -1 || signalIndex >= result.signals.length - 1) return;
         const nextSignal = result.signals[signalIndex + 1];
-        setSearchParams({ signal: nextSignal.date, target: targetId || '' });
+        setSearchParams({ signal: nextSignal.date, target: targetId || activeTarget?.id || '' });
     };
 
     const handlePrevSignal = () => {
         if (!result || signalIndex <= 0) return;
         const prevSignal = result.signals[signalIndex - 1];
-        setSearchParams({ signal: prevSignal.date });
+        setSearchParams({ signal: prevSignal.date, target: targetId || activeTarget?.id || '' });
     };
+
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "ArrowRight") {
+                handleNextSignal();
+            } else if (e.key === "ArrowLeft") {
+                handlePrevSignal();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [handleNextSignal, handlePrevSignal]);
 
     const handleAddIndicator = (spec: string) => {
         if (!activeIndicatorSpecs.includes(spec)) {
