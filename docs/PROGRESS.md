@@ -76,3 +76,4 @@ Last updated: 2026-02-15
 | 2026-02-15 | Phase 1 Agent | Python Backend Implementation | ✅ |
 | 2026-02-15 | Antigravity   | Upgraded Condition Builder (UI + Logic) | ✅ |
 | 2026-02-16 | Antigravity   | Enhancing Results Table and Distribution Graph | ✅ |
+| 2026-02-18 | Antigravity   | Added configurable binning settings to distribution chart | ✅ |
