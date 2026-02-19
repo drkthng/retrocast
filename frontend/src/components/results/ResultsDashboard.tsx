@@ -119,7 +119,7 @@ export default function ResultsDashboard() {
                         {/* Right: Chart Panel with Tabs */}
                         <div className="lg:col-span-2">
                             {activeTargetStats ? (
-                                <Card className={activeChartTab === "statistics" ? "min-h-[400px] h-auto" : "h-[400px]"}>
+                                <Card className="h-[400px] overflow-hidden">
                                     {/* Tab strip */}
                                     <div className="flex items-center gap-1 px-4 pt-3 border-b border-border/50">
                                         <button

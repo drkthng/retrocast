@@ -15,7 +15,7 @@ export function TargetBars({ stats, onTargetClick, hitRateMode }: TargetBarsProp
             <CardHeader>
                 <CardTitle>Target Performance</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="h-[320px] overflow-y-auto space-y-6 pr-4 scrollbar-thin scrollbar-thumb-muted-foreground/20">
                 {stats.map((target) => {
                     const displayRate = (hitRateMode === "anytime" ? target.anytime_hit_rate_pct : target.hit_rate_pct) ?? 0;
                     const displayHitCount = (hitRateMode === "anytime" ? target.anytime_hit_count : target.hit_count) ?? 0;
