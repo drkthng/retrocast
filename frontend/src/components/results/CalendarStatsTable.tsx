@@ -128,16 +128,16 @@ export function CalendarStatsTable({ signals, targetId, hitRateMode }: CalendarS
                     rate: count > 0 ? (hits / count) * 100 : 0,
                 }));
 
-        // Sort months chronologically: compare YYYY-MM
+        // Sort months chronologically: newest first
         const sortMonths = (a: [string, any], b: [string, any]) => {
             // Label is "Jan 2024"
             const [m1, y1] = a[0].split(" ");
             const [m2, y2] = b[0].split(" ");
-            if (y1 !== y2) return y1.localeCompare(y2);
-            return MONTH_NAMES.indexOf(m1) - MONTH_NAMES.indexOf(m2);
+            if (y1 !== y2) return y2.localeCompare(y1);
+            return MONTH_NAMES.indexOf(m2) - MONTH_NAMES.indexOf(m1);
         };
 
-        const sortYears = (a: [string, any], b: [string, any]) => a[0].localeCompare(b[0]);
+        const sortYears = (a: [string, any], b: [string, any]) => b[0].localeCompare(a[0]);
 
         return {
             monthlyRows: toRows(monthMap, sortMonths),
