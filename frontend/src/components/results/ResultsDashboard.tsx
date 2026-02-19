@@ -5,16 +5,21 @@ import { useAnalysis } from "@/hooks/useAnalysis";
 import { StatCards } from "./StatCards";
 import { TargetBars } from "./TargetBars";
 import { DistributionChart } from "./DistributionChart";
+import { TimeResolutionChart } from "./TimeResolutionChart";
 import { SignalsTable } from "./SignalsTable";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Loader2, Download } from "lucide-react";
 import { exportApi } from "@/services/api";
+
+type ChartTab = "distribution" | "time";
 
 export default function ResultsDashboard() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { fetchLastResult, result, isLoadingResult, error } = useAnalysis();
     const [activeTargetId, setActiveTargetId] = useState<string | null>(null);
+    const [activeChartTab, setActiveChartTab] = useState<ChartTab>("distribution");
 
     useEffect(() => {
         if (id) {
@@ -87,14 +92,48 @@ export default function ResultsDashboard() {
                             />
                         </div>
 
-                        {/* Right: Distribution Chart */}
+                        {/* Right: Chart Panel with Tabs */}
                         <div className="lg:col-span-2">
                             {activeTargetStats ? (
-                                <DistributionChart
-                                    target={activeTargetStats}
-                                    targets={result.target_stats}
-                                    onTargetChange={setActiveTargetId}
-                                />
+                                <Card className="h-[400px]">
+                                    {/* Tab strip */}
+                                    <div className="flex items-center gap-1 px-4 pt-3 border-b border-border/50">
+                                        <button
+                                            onClick={() => setActiveChartTab("distribution")}
+                                            className={`px-3 py-1.5 text-sm font-medium rounded-t transition-colors ${activeChartTab === "distribution"
+                                                    ? "bg-primary/10 text-primary border-b-2 border-primary"
+                                                    : "text-muted-foreground hover:text-foreground"
+                                                }`}
+                                        >
+                                            Distribution
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveChartTab("time")}
+                                            className={`px-3 py-1.5 text-sm font-medium rounded-t transition-colors ${activeChartTab === "time"
+                                                    ? "bg-primary/10 text-primary border-b-2 border-primary"
+                                                    : "text-muted-foreground hover:text-foreground"
+                                                }`}
+                                        >
+                                            Time Resolution
+                                        </button>
+                                    </div>
+
+                                    {/* Chart content */}
+                                    {activeChartTab === "distribution" ? (
+                                        <DistributionChart
+                                            target={activeTargetStats}
+                                            targets={result.target_stats}
+                                            onTargetChange={setActiveTargetId}
+                                        />
+                                    ) : (
+                                        <TimeResolutionChart
+                                            target={activeTargetStats}
+                                            targets={result.target_stats}
+                                            signals={result.signals}
+                                            onTargetChange={setActiveTargetId}
+                                        />
+                                    )}
+                                </Card>
                             ) : (
                                 <div className="h-[400px] flex items-center justify-center border rounded bg-card text-muted-foreground">
                                     Select a target to view distribution

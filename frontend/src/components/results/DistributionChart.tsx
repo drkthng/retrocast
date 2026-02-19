@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Label } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
@@ -134,7 +134,7 @@ export function DistributionChart({ target, targets, onTargetChange }: Distribut
     const yLabel = yAxisMode === "percent" ? "Frequency (%)" : "Signals";
 
     return (
-        <Card className="h-[400px]">
+        <>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle>Return Distribution ({target.days_forward}d)</CardTitle>
                 <div className="flex items-center gap-2">
@@ -309,6 +309,6 @@ export function DistributionChart({ target, targets, onTargetChange }: Distribut
                     </BarChart>
                 </ResponsiveContainer>
             </CardContent>
-        </Card>
+        </>
     );
 }
