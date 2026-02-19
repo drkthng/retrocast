@@ -176,6 +176,13 @@ def run_analysis(scenario: ScenarioInDB) -> AnalysisResult:
             else:  # ABOVE
                 hit = change_pct >= target.threshold_pct
 
+            # Anytime hit: target was touched at any point during the window
+            if target.direction.value == "BELOW":
+                anytime_effective = -target.threshold_pct if target.threshold_pct > 0 else target.threshold_pct
+                anytime_hit = (max_change_pct is not None) and (max_change_pct <= anytime_effective)
+            else:  # ABOVE
+                anytime_hit = (max_change_pct is not None) and (max_change_pct >= target.threshold_pct)
+
             signal.outcomes.append(
                 SignalOutcome(
                     target_id=target.id,
@@ -187,6 +194,7 @@ def run_analysis(scenario: ScenarioInDB) -> AnalysisResult:
                     actual_change_pct=round(change_pct, 4),
                     max_change_pct=max_change_pct,
                     hit=hit,
+                    anytime_hit=anytime_hit,
                 )
             )
 
@@ -252,6 +260,7 @@ def _compute_target_stats(signals: list[Signal], targets) -> list[TargetStats]:
         changes: list[float] = []
         hit_count = 0
         miss_count = 0
+        anytime_hit_count = 0
 
         for signal in signals:
             for outcome in signal.outcomes:
@@ -264,6 +273,9 @@ def _compute_target_stats(signals: list[Signal], targets) -> list[TargetStats]:
                     hit_count += 1
                 else:
                     miss_count += 1
+                
+                if outcome.anytime_hit:
+                    anytime_hit_count += 1
 
         total_evaluable = len(changes)
 
@@ -278,6 +290,8 @@ def _compute_target_stats(signals: list[Signal], targets) -> list[TargetStats]:
                     hit_count=0,
                     miss_count=0,
                     hit_rate_pct=0.0,
+                    anytime_hit_count=0,
+                    anytime_hit_rate_pct=0.0,
                     avg_change_pct=0.0,
                     median_change_pct=0.0,
                     max_change_pct=0.0,
@@ -303,6 +317,8 @@ def _compute_target_stats(signals: list[Signal], targets) -> list[TargetStats]:
                 hit_count=hit_count,
                 miss_count=miss_count,
                 hit_rate_pct=round(hit_count / total_evaluable * 100, 2),
+                anytime_hit_count=anytime_hit_count,
+                anytime_hit_rate_pct=round(anytime_hit_count / total_evaluable * 100, 2),
                 avg_change_pct=round(float(np.mean(arr)), 4),
                 median_change_pct=round(float(np.median(arr)), 4),
                 max_change_pct=round(float(np.max(arr)), 4),

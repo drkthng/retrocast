@@ -46,8 +46,15 @@ def test_engine_end_to_end(sample_data):
     # Check structure
     if result.total_signals > 0:
         sig = result.signals[0]
-        # Check specific key from get_column_name logic
         assert "PRICE_CHANGE_1" in sig.indicator_values
+        # New anytime fields must be present
+        outcome = sig.outcomes[0]
+        assert hasattr(outcome, "anytime_hit"), "anytime_hit missing from SignalOutcome"
+        ts = result.target_stats[0]
+        assert hasattr(ts, "anytime_hit_count"), "anytime_hit_count missing from TargetStats"
+        assert hasattr(ts, "anytime_hit_rate_pct"), "anytime_hit_rate_pct missing from TargetStats"
+        # Anytime rate must be >= final rate (touching during window is always >= closing at end)
+        assert ts.anytime_hit_rate_pct >= ts.hit_rate_pct, "anytime rate should be >= final rate"
 
 def test_engine_no_signals(sample_data):
     # Impossible condition: PRICE_CHANGE > 100% daily (unlikely in random walk 0.02 sigma)

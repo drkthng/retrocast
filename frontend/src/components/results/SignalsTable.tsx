@@ -27,9 +27,10 @@ import { cn } from "@/lib/utils";
 interface SignalsTableProps {
     signals: Signal[];
     onSignalClick?: (signal: Signal) => void;
+    hitRateMode: "final" | "anytime";
 }
 
-export function SignalsTable({ signals, onSignalClick }: SignalsTableProps) {
+export function SignalsTable({ signals, onSignalClick, hitRateMode }: SignalsTableProps) {
     const [sorting, setSorting] = useState<SortingState>([]);
 
     // Dynamically generate columns based on the first signal's data
@@ -80,21 +81,28 @@ export function SignalsTable({ signals, onSignalClick }: SignalsTableProps) {
                         )}>
                             {o.actual_change_pct ? `${o.actual_change_pct.toFixed(2)}%` : "-"}
                         </span>
-                        {o.hit !== undefined && (
-                            <span className={cn(
-                                "text-[10px] px-1.5 py-0.5 rounded uppercase font-bold",
-                                o.hit ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"
-                            )}>
-                                {o.hit ? "HIT" : "MISS"}
-                            </span>
-                        )}
+                        {(() => {
+                            const isAnytime = hitRateMode === "anytime";
+                            const hitValue = isAnytime ? o.anytime_hit : o.hit;
+                            if (hitValue === undefined || hitValue === null) return null;
+                            return (
+                                <span className={cn(
+                                    "text-[10px] px-1.5 py-0.5 rounded uppercase font-bold",
+                                    hitValue ? "bg-green-500/10 text-green-500" : "bg-red-500/10 text-red-500"
+                                )}>
+                                    {hitValue
+                                        ? (isAnytime ? "ANYHIT" : "HIT")
+                                        : (isAnytime ? "ANYMISS" : "MISS")}
+                                </span>
+                            );
+                        })()}
                     </div>
                 );
             }
         }));
 
         return [...baseColumns, ...outcomeColumns];
-    }, [signals]);
+    }, [signals, hitRateMode]);
 
     const table = useReactTable({
         data: signals,

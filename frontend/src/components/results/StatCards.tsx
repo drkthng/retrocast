@@ -5,12 +5,14 @@ import { format } from "date-fns";
 
 interface StatCardsProps {
     result: AnalysisResult;
+    hitRateMode: "final" | "anytime";
 }
 
-export function StatCards({ result }: StatCardsProps) {
+export function StatCards({ result, hitRateMode }: StatCardsProps) {
     // Calculate some aggregate stats
-    const bestHitRate = Math.max(...result.target_stats.map(t => t.hit_rate_pct));
-    const avgHitRate = result.target_stats.reduce((acc, t) => acc + t.hit_rate_pct, 0) / (result.target_stats.length || 1);
+    const rateField = hitRateMode === "anytime" ? "anytime_hit_rate_pct" : "hit_rate_pct";
+    const bestHitRate = Math.max(...result.target_stats.map(t => t[rateField]));
+    const avgHitRate = result.target_stats.reduce((acc, t) => acc + t[rateField], 0) / (result.target_stats.length || 1);
     const totalSignals = result.total_signals;
 
     return (
@@ -40,7 +42,7 @@ export function StatCards({ result }: StatCardsProps) {
                 <CardContent>
                     <div className="text-2xl font-bold">{avgHitRate.toFixed(1)}%</div>
                     <p className="text-xs text-muted-foreground">
-                        Across {result.target_stats.length} target profiles
+                        Across {result.target_stats.length} target profiles{hitRateMode === "anytime" ? " (anytime)" : ""}
                     </p>
                 </CardContent>
             </Card>

@@ -17,6 +17,7 @@ class SignalOutcome(BaseModel):
     actual_change_pct: Optional[float] = None
     max_change_pct: Optional[float] = None  # Max favourable % move during the window
     hit: Optional[bool] = None
+    anytime_hit: Optional[bool] = None
 
 
 class Signal(BaseModel):
@@ -39,6 +40,8 @@ class TargetStats(BaseModel):
     hit_count: int
     miss_count: int
     hit_rate_pct: float
+    anytime_hit_count: int
+    anytime_hit_rate_pct: float
     avg_change_pct: float
     median_change_pct: float
     max_change_pct: float
