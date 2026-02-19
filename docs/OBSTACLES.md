@@ -100,3 +100,11 @@ When you encounter a problem during development:
 - **Solution**: Use perfectly linear trends or specific slopes in mock data for verification scripts.
 - **Prevention**: Use fixed-seed deterministic mock data for automated tests.
 - **Related Files**: `verify_upgrade.py` (verification script)
+### Zombie Python Processes on Port 8000
+- **Date**: 2026-02-19
+- **Phase**: 1/3
+- **Problem**: API returns old data or lacks new fields (e.g., `max_change_pct`) even after code changes and app restart.
+- **Root Cause**: Stale Python processes remain bound to port 8000 on Windows, even if Electron or the dev script is closed. New processes fail to bind or requests are served by old instances.
+- **Solution**: Manually kill all Python processes listening on port 8000. Use `netstat -ano | findstr ":8000"` to find PIDs and `taskkill /F /PID <PID>` to terminate.
+- **Prevention**: Ensure robust process management in `dev.js`. Periodically check for zombie processes if behavior is inconsistent.
+- **Related Files**: `backend/app/core/engine.py`, `scripts/dev.js`

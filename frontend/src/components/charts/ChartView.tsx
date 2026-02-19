@@ -196,6 +196,11 @@ export default function ChartView() {
         <div className="h-full flex flex-col">
             <PageHeader title={`${scenario.underlying} Chart`}>
                 <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => navigate(`/scenarios/${id}/results`)} className="mr-2">
+                        <ChevronLeft className="h-4 w-4 mr-1" />
+                        Back to Results
+                    </Button>
+                    <div className="w-px h-6 bg-border mx-2" />
                     <IndicatorSelect onSelect={handleAddIndicator} />
                     <div className="w-px h-6 bg-border mx-2" />
                     {scenario.targets.length > 1 && (
