@@ -48,7 +48,7 @@ function CustomDot(props: any) {
     );
 }
 
-function CustomTooltip({ active, payload, yMode }: any) {
+function CustomTooltip({ active, payload }: any) {
     if (!active || !payload?.length) return null;
     const d: DataPoint = payload[0].payload;
     return (
@@ -147,8 +147,8 @@ export function TimeResolutionChart({
                         <button
                             onClick={() => setYMode("final")}
                             className={`px-2.5 py-1 transition-colors ${yMode === "final"
-                                    ? "bg-primary text-primary-foreground"
-                                    : "bg-transparent text-muted-foreground hover:text-foreground"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-transparent text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             Final %
@@ -156,8 +156,8 @@ export function TimeResolutionChart({
                         <button
                             onClick={() => setYMode("max")}
                             className={`px-2.5 py-1 transition-colors ${yMode === "max"
-                                    ? "bg-primary text-primary-foreground"
-                                    : "bg-transparent text-muted-foreground hover:text-foreground"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-transparent text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             Max %

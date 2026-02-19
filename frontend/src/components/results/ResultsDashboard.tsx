@@ -7,12 +7,13 @@ import { TargetBars } from "./TargetBars";
 import { DistributionChart } from "./DistributionChart";
 import { TimeResolutionChart } from "./TimeResolutionChart";
 import { SignalsTable } from "./SignalsTable";
+import { CalendarStatsTable } from "./CalendarStatsTable";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Loader2, Download } from "lucide-react";
 import { exportApi } from "@/services/api";
 
-type ChartTab = "distribution" | "time";
+type ChartTab = "distribution" | "time" | "statistics";
 
 export default function ResultsDashboard() {
     const { id } = useParams();
@@ -118,7 +119,7 @@ export default function ResultsDashboard() {
                         {/* Right: Chart Panel with Tabs */}
                         <div className="lg:col-span-2">
                             {activeTargetStats ? (
-                                <Card className="h-[400px]">
+                                <Card className={activeChartTab === "statistics" ? "min-h-[400px] h-auto" : "h-[400px]"}>
                                     {/* Tab strip */}
                                     <div className="flex items-center gap-1 px-4 pt-3 border-b border-border/50">
                                         <button
@@ -139,6 +140,15 @@ export default function ResultsDashboard() {
                                         >
                                             Time Resolution
                                         </button>
+                                        <button
+                                            onClick={() => setActiveChartTab("statistics")}
+                                            className={`px-3 py-1.5 text-sm font-medium rounded-t transition-colors ${activeChartTab === "statistics"
+                                                ? "bg-primary/10 text-primary border-b-2 border-primary"
+                                                : "text-muted-foreground hover:text-foreground"
+                                                }`}
+                                        >
+                                            Statistics
+                                        </button>
                                     </div>
 
                                     {/* Chart content */}
@@ -148,12 +158,18 @@ export default function ResultsDashboard() {
                                             targets={result.target_stats}
                                             onTargetChange={setActiveTargetId}
                                         />
-                                    ) : (
+                                    ) : activeChartTab === "time" ? (
                                         <TimeResolutionChart
                                             target={activeTargetStats}
                                             targets={result.target_stats}
                                             signals={result.signals}
                                             onTargetChange={setActiveTargetId}
+                                        />
+                                    ) : (
+                                        <CalendarStatsTable
+                                            signals={result.signals}
+                                            targetId={activeTargetId}
+                                            hitRateMode={hitRateMode}
                                         />
                                     )}
                                 </Card>
