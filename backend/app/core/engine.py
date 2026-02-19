@@ -145,6 +145,7 @@ def run_analysis(scenario: ScenarioInDB) -> AnalysisResult:
                         future_date=None,
                         future_price=None,
                         actual_change_pct=None,
+                        max_change_pct=None,
                         hit=None,
                     )
                 )
@@ -154,6 +155,18 @@ def run_analysis(scenario: ScenarioInDB) -> AnalysisResult:
             future_close = float(future_row["close"])
             future_date = df.index[future_idx]
             change_pct = (future_close - signal_close) / signal_close * 100
+
+            # Max % move during the window (slice already in memory — negligible cost)
+            window_slice = df.iloc[signal_idx + 1 : future_idx + 1]
+            if len(window_slice) > 0 and target.direction.value == "ABOVE":
+                # Best case during window: max high
+                max_val = float(window_slice["high"].max())
+                max_change_pct = round((max_val - signal_close) / signal_close * 100, 4)
+            elif len(window_slice) > 0:  # BELOW — worst drop
+                min_val = float(window_slice["low"].min())
+                max_change_pct = round((min_val - signal_close) / signal_close * 100, 4)
+            else:
+                max_change_pct = None
 
             if target.direction.value == "BELOW":
                 # If the user says BELOW 5%, they usually mean "lost 5% or more", which is <= -5%
@@ -172,6 +185,7 @@ def run_analysis(scenario: ScenarioInDB) -> AnalysisResult:
                     future_date=future_date.strftime("%Y-%m-%d"),
                     future_price=round(future_close, 4),
                     actual_change_pct=round(change_pct, 4),
+                    max_change_pct=max_change_pct,
                     hit=hit,
                 )
             )

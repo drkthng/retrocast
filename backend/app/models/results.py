@@ -15,6 +15,7 @@ class SignalOutcome(BaseModel):
     future_date: Optional[str] = None
     future_price: Optional[float] = None
     actual_change_pct: Optional[float] = None
+    max_change_pct: Optional[float] = None  # Max favourable % move during the window
     hit: Optional[bool] = None
 
 

@@ -87,6 +87,7 @@ export interface SignalOutcome {
     future_date?: string;
     future_price?: number;
     actual_change_pct?: number;
+    max_change_pct?: number;
     hit?: boolean;
 }
 
