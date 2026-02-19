@@ -11,8 +11,8 @@ interface StatCardsProps {
 export function StatCards({ result, hitRateMode }: StatCardsProps) {
     // Calculate some aggregate stats
     const rateField = hitRateMode === "anytime" ? "anytime_hit_rate_pct" : "hit_rate_pct";
-    const bestHitRate = Math.max(...result.target_stats.map(t => t[rateField]));
-    const avgHitRate = result.target_stats.reduce((acc, t) => acc + t[rateField], 0) / (result.target_stats.length || 1);
+    const bestHitRate = Math.max(...result.target_stats.map(t => t[rateField] ?? 0));
+    const avgHitRate = result.target_stats.reduce((acc, t) => acc + (t[rateField] ?? 0), 0) / (result.target_stats.length || 1);
     const totalSignals = result.total_signals;
 
     return (

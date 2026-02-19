@@ -40,8 +40,8 @@ class TargetStats(BaseModel):
     hit_count: int
     miss_count: int
     hit_rate_pct: float
-    anytime_hit_count: int
-    anytime_hit_rate_pct: float
+    anytime_hit_count: int = 0
+    anytime_hit_rate_pct: float = 0.0
     avg_change_pct: float
     median_change_pct: float
     max_change_pct: float

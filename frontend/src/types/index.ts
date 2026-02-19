@@ -108,8 +108,8 @@ export interface TargetStats {
     hit_count: number;
     miss_count: number;
     hit_rate_pct: number;
-    anytime_hit_count: number;
-    anytime_hit_rate_pct: number;
+    anytime_hit_count?: number;
+    anytime_hit_rate_pct?: number;
     avg_change_pct: number;
     median_change_pct: number;
     max_change_pct: number;
