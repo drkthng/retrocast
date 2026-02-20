@@ -76,3 +76,44 @@ def test_engine_no_signals(sample_data):
     result = run_analysis(scenario)
     assert result.total_signals == 0
     assert result.target_stats[0].total_evaluable == 0
+
+def test_engine_date_range_filter(sample_data):
+    """Date range filter must reduce total_bars compared to an unrestricted run."""
+    cond = ConditionConfig(
+        indicator=Indicator.PRICE_CHANGE,
+        params={"period": 1},
+        operator=Operator.ABOVE,
+        compare_to=CompareTo.VALUE,
+        compare_value=0.5,
+    )
+    target = TargetConfig(days_forward=5, threshold_pct=0.0, direction=Direction.ABOVE)
+
+    base_scenario = ScenarioInDB(
+        id=str(uuid4()), name="Full", underlying="TEST",
+        data_source=DataSource.CSV, csv_path="tests/fixtures/sample_data.csv",
+        timeframe=Timeframe.DAILY, conditions=[cond], targets=[target],
+        created_at="", updated_at="",
+    )
+    full_result = run_analysis(base_scenario)
+
+    # Check what the fixture's date range is, pick a sub-range
+    from app.core.data_loader import load_data
+    df = load_data("TEST", DataSource.CSV, csv_path="tests/fixtures/sample_data.csv")
+    # full_result.total_bars is 500. We need at least 252. 
+    # Let's start from bar 100 so we have 400 bars left.
+    mid_idx = 100 
+    mid = df.index[mid_idx]
+    start_str = mid.strftime("%Y-%m-%d")
+
+    restricted_scenario = ScenarioInDB(
+        id=str(uuid4()), name="Restricted", underlying="TEST",
+        data_source=DataSource.CSV, csv_path="tests/fixtures/sample_data.csv",
+        timeframe=Timeframe.DAILY, conditions=[cond], targets=[target],
+        created_at="", updated_at="",
+        date_range_start=start_str,
+    )
+    restricted_result = run_analysis(restricted_scenario)
+
+    assert restricted_result.total_bars < full_result.total_bars, (
+        f"Date range filter did not reduce total_bars: {restricted_result.total_bars} vs {full_result.total_bars}"
+    )

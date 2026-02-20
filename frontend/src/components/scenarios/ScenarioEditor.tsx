@@ -37,6 +37,8 @@ const formSchema = z.object({
     csv_path: z.string().optional(),
     conditions: z.array(z.any()).min(1, "At least one condition is required"),
     targets: z.array(z.any()).min(1, "At least one target is required"),
+    date_range_start: z.string().optional(),
+    date_range_end: z.string().optional(),
 });
 
 export default function ScenarioEditor() {
@@ -55,6 +57,8 @@ export default function ScenarioEditor() {
             csv_path: "",
             conditions: [],
             targets: [],
+            date_range_start: "",
+            date_range_end: "",
         },
     });
 
@@ -74,6 +78,8 @@ export default function ScenarioEditor() {
                 csv_path: scenario.csv_path || "",
                 conditions: scenario.conditions,
                 targets: scenario.targets,
+                date_range_start: scenario.date_range_start || "",
+                date_range_end: scenario.date_range_end || "",
             });
         }
     }, [scenario, isEditMode, form]);
@@ -86,6 +92,8 @@ export default function ScenarioEditor() {
             timeframe: "1d",
             conditions: values.conditions as any,
             targets: values.targets as any,
+            date_range_start: values.date_range_start || undefined,
+            date_range_end: values.date_range_end || undefined,
         };
 
         let result;
@@ -192,6 +200,42 @@ export default function ScenarioEditor() {
                                             )}
                                         />
                                     </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Date Range */}
+                            <Card>
+                                <CardHeader><CardTitle>Date Range <span className="text-muted-foreground font-normal text-sm">(optional)</span></CardTitle></CardHeader>
+                                <CardContent>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="date_range_start"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Start Date</FormLabel>
+                                                    <FormControl>
+                                                        <Input type="date" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="date_range_end"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>End Date</FormLabel>
+                                                    <FormControl>
+                                                        <Input type="date" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <p className="text-xs text-muted-foreground mt-2">Leave blank to use all available data.</p>
                                 </CardContent>
                             </Card>
 
